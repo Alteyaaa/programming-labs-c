@@ -1,0 +1,40 @@
+# Папки сборки CLion/CMake
+cmake-build-debug/
+cmake-build-release/
+
+# Служебные файлы CMake
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+Makefile
+cmake_install.cmake
+*.cmake
+install_manifest.txt
+.compile_commands.json
+
+# Исполняемые файлы 
+*.exe
+*.out
+*.app
+
+# Объектные файлы
+*.o
+*.obj
+
+# Библиотеки
+*.a
+*.so
+*.dylib
+*.lib
+*.dll
+
+# Файлы CLion
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Резервные копии
+*.bak
+*.tmp
+*~
