@@ -7,7 +7,7 @@ int main() {
     scanf("%d%d%d%d%d%d", &A, &B, &C, &D, &E, &F);
 
 
-//    B * (C * E – D) / C + A * (F / D)
+    //    B * (C * E – D) / C + A * (F / D)
 
 
     asm(
@@ -46,4 +46,3 @@ int main() {
 
     return 0;
 }
-
