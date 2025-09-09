@@ -12,7 +12,7 @@ cmake_install.cmake
 install_manifest.txt
 .compile_commands.json
 
-# Исполняемые файлы 
+# Исполняемые файлы
 *.exe
 *.out
 *.app
