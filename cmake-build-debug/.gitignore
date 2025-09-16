@@ -1,0 +1,113 @@
+# Compiled object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.bin
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Kernel Module Compile Results
+*.mod*
+*.cmd
+.tmp_versions/
+modules.order
+Module.symvers
+Mkfile.old
+dkms.conf
+
+# CMake build files
+cmake-build-*/
+build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.cmake
+
+# IDE files (CLion, Visual Studio, etc.)
+.idea/
+.vscode/
+*.vcxproj
+*.vcxproj.filters
+*.sln
+*.user
+*.sdf
+*.opensdf
+*.suo
+
+# Temporary files
+*.tmp
+*.temp
+*~
+*.bak
+*.swp
+*.swo
+
+# Log files
+*.log
+*.tlog
+
+# Coverage files
+*.gcno
+*.gcda
+*.gcov
+
+# Dependency files
+*.d
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# Visual Studio Code
+.vscode/
+
+# CLion
+.idea/
+*.iws
+
+# Test results
+Testing/
+test-results/
+
+# Documentation
+doc/
+html/
+latex/
+
+# Package files
+*.tar.gz
+*.zip
