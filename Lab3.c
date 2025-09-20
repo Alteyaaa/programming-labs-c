@@ -1,19 +1,32 @@
 #include <float.h>
 #include <stdio.h>
 #include <math.h>
+#include <stdbool.h>
 
-double function1(int nm1, double x, double y) {
+// Вариант 8.
+
+
+
+double function1(int nm1, double x, double y, bool *error) {
     double sum = 0;
     for (int n = 0; n <= nm1; n++) {
-        sum += (x + 2 * pow(y, n + 1)) / pow((2 * y + 1), n);
+        double denominator = pow((2 * y + 1), n);
+        if (denominator == 0) {
+            *error = true;
+            return 0;
+        }
+        sum += (x + 2 * pow(y, n + 1)) / denominator;
     }
     return sum;
 }
 
-double function2(int nm2, int a, double x, double y) {
+double function2(int nm2, int a, double x, double y, bool *error) {
     double sum = 0;
     for (int n = 0; n <= nm2; n++) {
-        // log() сам вернет NaN для недопустимых аргументов
+        if (y * x <= 0) {
+            *error = true;
+            return 0;
+        }
         sum += log(y * x) * (sin(x - a) + n);
     }
     return sum;
@@ -58,10 +71,17 @@ int main() {
 
     for (double y = y0; y <= yn; y += hy) {
         for (double x = x0; x <= xn; x += hx) {
+
+            bool error = false;
+
             if (y < a) {
-                f = function1(nm1, x, y);
+                f = function1(nm1, x, y, &error);
             } else {
-                f = function2(nm2, a, x, y);
+                f = function2(nm2, a, x, y, &error);
+            }
+            if (error) {
+                printf("| %9s | %9s | %12s |\n", "error", "error", "error");
+                continue;
             }
             printf("| %9.3f | %9.3f | %12.3f |\n", x, y, f);
 
@@ -85,3 +105,17 @@ int main() {
 
     return 0;
 }
+
+// Enter x0, hx, xn:
+// -2 0.5 2
+// Enter y0, hy, yn:
+// -1 0.7 4
+// Enter a, nm1, nm2:
+// 5 2 6
+
+// Enter x0, hx, xn:
+// -2 0.5 2
+// Enter y0, hy, yn:
+// -1 0.5 4
+// Enter a, nm1, nm2:
+// 3 2 4
