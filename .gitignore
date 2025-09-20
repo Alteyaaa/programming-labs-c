@@ -46,9 +46,12 @@ Mkfile.old
 dkms.conf
 
 # CMake build files
+cmake-build-debug
+cmake-build-debug/.ninja_deps
+cmake-build-debug/.ninja_log
 cmake-build-*/
 build/
-CMakeFiles/
+cmake-build-debug/CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
