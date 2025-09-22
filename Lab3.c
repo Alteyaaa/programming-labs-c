@@ -3,9 +3,6 @@
 #include <math.h>
 #include <stdbool.h>
 
-// Вариант 8.
-
-
 
 double function1(int nm1, double x, double y, bool *error) {
     double sum = 0;
