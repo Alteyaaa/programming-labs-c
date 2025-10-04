@@ -17,7 +17,7 @@ float recursively(float a, float b, float eps) {
     }
 }
 
-float iteratively(double a, double b, double eps) {
+float iteratively(float a, float b, float eps) {
     float x = (b + a) / 2;;
     while (fabs(b - a) > eps || fabs(f(x)) > eps) {
         x = (b + a) / 2;
