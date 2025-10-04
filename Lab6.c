@@ -8,12 +8,12 @@ void keyboard_input(double (*arr)[100], int coord_num) {
     printf("Input x and y coordinates:\n");
     for (int i = 0; i < coord_num; i++) {
         scanf("%lf %lf", &x, &y);
-        *(*arr+i) = x;
-        *(*(arr+1)+i) = y;
+        *(*arr + i) = x;
+        *(*(arr + 1) + i) = y;
     }
     printf("\nGenerated points:\n");
     for (int i = 0; i < coord_num; i++) {
-        printf("Point %d: (%.2f, %.2f)\n", i + 1, *(*arr+i), *(*(arr+1)+i));
+        printf("Point %d: (%.2f, %.2f)\n", i + 1, *(*arr + i), *(*(arr + 1) + i));
     }
 }
 
@@ -22,12 +22,12 @@ void random_input(double (*arr)[100], int coord_num) {
     printf("Input range boundaries:\n");
     scanf("%lf %lf", &min, &max);
     for (int i = 0; i < coord_num; i++) {
-        *(*arr+i) = min + (max - min) * ((double) rand() / RAND_MAX);
-        *(*(arr+1)+i) = min + (max - min) * ((double) rand() / RAND_MAX);
+        *(*arr + i) = min + (max - min) * ((double) rand() / RAND_MAX);
+        *(*(arr + 1) + i) = min + (max - min) * ((double) rand() / RAND_MAX);
     }
     printf("\nGenerated points:\n");
     for (int i = 0; i < coord_num; i++) {
-        printf("Point %d: (%.2f, %.2f)\n", i + 1, *(*arr+i), *(*(arr+1)+i));
+        printf("Point %d: (%.2f, %.2f)\n", i + 1, *(*arr + i), *(*(arr + 1) + i));
     }
 }
 
@@ -42,7 +42,7 @@ void print_results(double (*inside)[100], double (*outside)[100], int in_count, 
     printf("\nPoints inside the area (%d points):\n", in_count);
     if (in_count > 0) {
         for (int i = 0; i < in_count; i++) {
-            printf("Point %d: (%.2f, %.2f)\n", i + 1, *(*inside+i), *(*(inside+1)+i));
+            printf("Point %d: (%.2f, %.2f)\n", i + 1, *(*inside + i), *(*(inside + 1) + i));
         }
     } else {
         printf("No points inside the area\n");
@@ -51,7 +51,7 @@ void print_results(double (*inside)[100], double (*outside)[100], int in_count, 
     printf("\nPoints outside the area (%d points):\n", out_count);
     if (out_count > 0) {
         for (int i = 0; i < out_count; i++) {
-            printf("Point %d: (%.2f, %.2f)\n", i + 1, *(*outside+i), *(*(outside+1)+i));
+            printf("Point %d: (%.2f, %.2f)\n", i + 1, *(*outside + i), *(*(outside + 1) + i));
         }
     } else {
         printf("All points are inside the area!\n");
@@ -78,11 +78,14 @@ int main() {
         printf("Incorrect value entered\n");
         scanf("%d", &n);
     }
+    
+    void (*input_function)(double (*)[100], int); //объявление указателя на функцию (без скобок - объявление функции)
     if (n == 1) {
-        keyboard_input(points, coord_num);
+        input_function = keyboard_input;
     } else {
-        random_input(points, coord_num);
+        input_function = random_input;
     }
+    input_function(points, coord_num);
 
     double R, a;
     printf("\nInput R of the circle and the boundary 'a' for Y:\n");
@@ -92,14 +95,14 @@ int main() {
     double inside[2][100], outside[2][100];
     int in_count = 0, out_count = 0;
     for (int i = 0; i < coord_num; i++) {
-        double x = *(*points+i), y = *(*(points+1)+i);
+        double x = *(*points + i), y = *(*(points + 1) + i);
         if (check_position_of_point(x, y, R, a)) {
-            *(*inside+in_count) = x;
-            *(*(inside+1)+in_count) = y;
+            *(*inside + in_count) = x;
+            *(*(inside + 1) + in_count) = y;
             in_count++;
         } else {
-            *(*outside+out_count) = x;
-            *(*(outside+1)+out_count) = y;
+            *(*outside + out_count) = x;
+            *(*(outside + 1) + out_count) = y;
             out_count++;
         }
     }
