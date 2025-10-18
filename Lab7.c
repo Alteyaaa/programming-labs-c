@@ -70,7 +70,8 @@ int main() {
     printf("Input the minimum and maximum values for random fill >> ");
     scanf("%d %d", &min, &max);
     while (min >= max) {
-        printf("The min value must be less than the max value!");
+        printf("The min value must be less than the max value!\n");
+        printf("Input the minimum and maximum values for random fill >> ");
         scanf("%d %d", &min, &max);
     }
 
