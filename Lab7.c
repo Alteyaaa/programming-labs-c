@@ -37,12 +37,12 @@ void fill_powers_of_two(int arr_a[], int arr_b[], size_t size) {
     }
 }
 
-void reverse(int arr_b[], size_t size) {
+void reverse(int arr[], size_t size) {
     int temp;
     for (int i = 0; i < size / 2; i++) {
-        temp = arr_b[i];
-        arr_b[i] = arr_b[size - i - 1];
-        arr_b[size - i - 1] = temp;
+        temp = arr[i];
+        arr[i] = arr[size - i - 1];
+        arr[size - i - 1] = temp;
     }
 }
 
@@ -63,7 +63,7 @@ int main() {
     arr_a = malloc(size_a * sizeof(int));
     if (arr_a == NULL) {
         printf("Memory not allocated!");
-        exit(1);
+        return 1;
     }
 
     int min, max;
@@ -86,7 +86,8 @@ int main() {
     if (arr_b == NULL) {
         printf("Memory not allocated!");
         free(arr_a);
-        exit(1);
+        arr_a = NULL;
+        return 1;
     }
 
     fill_powers_of_two(arr_a, arr_b, size_a);
