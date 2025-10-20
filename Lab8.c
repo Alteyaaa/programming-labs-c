@@ -3,10 +3,10 @@
 #include <time.h>
 #include <stdbool.h>
 
-void print_array(int **arr, int rows) {
+void print_array(int **arr_ptr, int rows) {
     for (int i = 0; i < rows; i++) {
-        for (int j = 1; j < arr[i][0] + 1; j++) {
-            printf("%d ", arr[i][j]);
+        for (int j = 1; j < arr_ptr[i][0] + 1; j++) {
+            printf("%d ", arr_ptr[i][j]);
         }
         printf("\n");
     }
@@ -59,6 +59,7 @@ void add_after_negative(int **arr_ptr, int min, int max, bool *error) {
         return;
     }
     *arr_ptr = temp;
+    temp = NULL;
     arr = *arr_ptr;
 
     arr[0] = new_size;
@@ -83,13 +84,13 @@ void rearrange_positive_negative(int *arr) {
 
     int index = 0;
 
-    for (int i = 1; i <= size; i++) {
+    for (int i = 1; i < size + 1; i++) {
         if (arr[i] >= 0) {
             temp[index++] = arr[i];
         }
     }
 
-    for (int i = 1; i <= size; i++) {
+    for (int i = 1; i < size + 1; i++) {
         if (arr[i] < 0) {
             temp[index++] = arr[i];
         }
@@ -114,7 +115,7 @@ void replace_negative_with_average(int *arr) {
     }
     int average = sum / size;
 
-    for (int i = 1; i <= size; i++) {
+    for (int i = 1; i < size + 1; i++) {
         if (arr[i] < 0) {
             arr[i] = average;
         }
