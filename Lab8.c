@@ -2,24 +2,28 @@
 #include <stdlib.h>
 #include <time.h>
 
-void print_array(int** arr, int rows, int cols) {
+void print_array(int** arr, int rows) {
     for (int i = 0; i < rows; i++) {
-        for (int j = 1; j < cols+1; j ++) {
+        for (int j = 1; j < arr[i][0]+1; j ++) {
             printf("%d ", arr[i][j]);
         }
         printf("\n");
     }
 }
 
-void remove_all_null_elements(int* arr, int *B) {
-    int size = *B;
+void remove_zeros(int* arr) {
+    int size = arr[0];
     int new_size = 0;
     for (int i = 1; i < size+1; i++) {
         if (arr[i] != 0) {
             arr[new_size++] = arr[i];
         }
-        *B = new_size;
+        arr[0] = new_size;
     }
+}
+
+void add_after_negative(int* arr) {
+    
 }
 
 int main() {
@@ -65,11 +69,11 @@ int main() {
         }
     }
 
-    print_array(arr, A, B);
+    print_array(arr, A);
     printf("\n-----------------------------\n");
     for (int i = 0; i < A; i++) {
-        remove_all_null_elements(arr[i], &B);
-        print_array(arr, A, B);
+        remove_all_null_elements(arr[i]);
+        print_array(arr, A);
         printf("\n-----------------------------\n");
     }
 
