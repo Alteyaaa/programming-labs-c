@@ -22,7 +22,6 @@ void remove_zeros(int **arr_ptr, bool *error) {
             arr[++new_size] = arr[i];
         }
     }
-    arr[0] = new_size;
 
     if (new_size == size) {
         return;
@@ -35,6 +34,7 @@ void remove_zeros(int **arr_ptr, bool *error) {
         return;
     }
     *arr_ptr = temp;
+    (*arr_ptr)[0] = new_size;
     temp = NULL;
 }
 
@@ -168,6 +168,9 @@ int main() {
         }
         temp_i = NULL;
     }
+
+    printf("Unmodified array:\n");
+    print_array(arr, A);
 
     bool error = false;
 
