@@ -3,7 +3,8 @@ project(programming_labs_c C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(Lab1 Lab1.c)
+add_executable(Lab1 Lab1.c
+        Lab9.c)
 add_executable(Lab2 Lab2.c)
 add_executable(Lab3 Lab3.c)
 add_executable(Lab4 Lab4.c)
