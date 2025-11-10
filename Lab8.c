@@ -12,9 +12,7 @@ void print_array(int **arr_ptr, int rows) {
     }
 }
 
-void remove_zeros(int **arr_ptr, bool *error) {
-    int *arr = *arr_ptr;
-    // arr_ptr - адрес указателя на текущий подмассив, *arr_ptr - указатель на подмассив, arr - то же самое, что и *arr_ptr
+int *remove_zeros(int *arr, bool *error) {
     int size = arr[0]; // arr - указатель на подмассив (первый элемент строки), *arr - то же самое, что и arr[0]
     int new_size = 0;
     for (int i = 1; i < size + 1; i++) {
@@ -24,22 +22,21 @@ void remove_zeros(int **arr_ptr, bool *error) {
     }
 
     if (new_size == size) {
-        return;
+        return arr;
     }
 
     int *temp = realloc(arr, (new_size + 1) * sizeof(int));
     // Теперь arr указывает на освобожденное место в памяти, а данные лежат по указателю temp
     if (temp == NULL) {
         *error = true;
-        return;
+        return arr;
     }
-    *arr_ptr = temp;
-    (*arr_ptr)[0] = new_size;
-    temp = NULL;
+    arr = temp;
+    arr[0] = new_size;
+    return arr;
 }
 
-void add_after_negative(int **arr_ptr, int min, int max, bool *error) {
-    int *arr = *arr_ptr;
+int *add_after_negative(int *arr, int min, int max, bool *error) {
     int size = arr[0];
     int count = 0;
     for (int i = 1; i < size + 1; i++) {
@@ -48,7 +45,7 @@ void add_after_negative(int **arr_ptr, int min, int max, bool *error) {
         }
     }
     if (count == 0) {
-        return;
+        return arr;
     }
 
     int new_size = size + count;
@@ -56,13 +53,12 @@ void add_after_negative(int **arr_ptr, int min, int max, bool *error) {
     int *temp = realloc(arr, (new_size + 1) * sizeof(int));
     if (temp == NULL) {
         *error = true;
-        return;
+        return arr;
     }
-    *arr_ptr = temp;
-    temp = NULL;
-    arr = *arr_ptr;
 
+    arr = temp;
     arr[0] = new_size;
+    temp = NULL;
 
     int insert_ind = new_size; // ячейка для вставки элемента
     int take_ind = size; // ячейка для взятия элемента
@@ -76,6 +72,7 @@ void add_after_negative(int **arr_ptr, int min, int max, bool *error) {
             arr[insert_ind--] = arr[take_ind--];
         }
     }
+    return arr;
 }
 
 void rearrange_positive_negative(int *arr) {
@@ -178,10 +175,10 @@ int main() {
     for (int i = 0; i < A; i++) {
         switch (i % 4) {
             case 0:
-                remove_zeros(&arr[i], &error);
+                arr[i] = remove_zeros(arr[i], &error);
                 break;
             case 1:
-                add_after_negative(&arr[i], min, max, &error);
+                arr[i] = add_after_negative(arr[i], min, max, &error);
                 break;
             case 2:
                 rearrange_positive_negative(arr[i]);
