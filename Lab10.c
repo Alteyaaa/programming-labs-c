@@ -3,127 +3,11 @@
 #include <time.h>
 #include <stdbool.h>
 
+#define POSITIVE_NEGATIVE
+#define REPLACE_WITH_AVERAGE
+
 #include "funcs.inc"
 
-#define ELEM(array, i) array[i]
-#define LEN(array)
-
-
-void print_array(int **arr_ptr, int rows) {
-    for (int i = 0; i < rows; i++) {
-        for (int j = 1; j < arr_ptr[i][0] + 1; j++) {
-            printf("%d ", arr_ptr[i][j]);
-        }
-        printf("\n");
-    }
-}
-
-int *remove_zeros(int *arr, bool *error) {
-    int size = arr[0]; // arr - указатель на подмассив (первый элемент строки), *arr - то же самое, что и arr[0]
-    int new_size = 0;
-    for (int i = 1; i < size + 1; i++) {
-        if (arr[i] != 0) {
-            arr[++new_size] = arr[i];
-        }
-    }
-
-    if (new_size == size) {
-        return arr;
-    }
-
-    int *temp = realloc(arr, (new_size + 1) * sizeof(int));
-    // Теперь arr указывает на освобожденное место в памяти, а данные лежат по указателю temp
-    if (temp == NULL) {
-        *error = true;
-        return arr;
-    }
-    arr = temp;
-    arr[0] = new_size;
-    return arr;
-}
-
-int *add_after_negative(int *arr, int min, int max, bool *error) {
-    int size = arr[0];
-    int count = 0;
-    for (int i = 1; i < size + 1; i++) {
-        if (arr[i] < 0) {
-            count++;
-        }
-    }
-    if (count == 0) {
-        return arr;
-    }
-
-    int new_size = size + count;
-
-    int *temp = realloc(arr, (new_size + 1) * sizeof(int));
-    if (temp == NULL) {
-        *error = true;
-        return arr;
-    }
-
-    arr = temp;
-    arr[0] = new_size;
-    temp = NULL;
-
-    int insert_ind = new_size; // ячейка для вставки элемента
-    int take_ind = size; // ячейка для взятия элемента
-
-    // Запись в новую область памяти элементов с конца, чтобы избежать перезаписи значений
-    while (take_ind > 0) {
-        if (arr[take_ind] < 0) {
-            arr[insert_ind--] = rand() % (max - min + 1) + min;
-            arr[insert_ind--] = arr[take_ind--];
-        } else {
-            arr[insert_ind--] = arr[take_ind--];
-        }
-    }
-    return arr;
-}
-
-void rearrange_positive_negative(int *arr) {
-    int size = arr[0];
-    int temp[size];
-
-    int index = 0;
-
-    for (int i = 1; i < size + 1; i++) {
-        if (arr[i] >= 0) {
-            temp[index++] = arr[i];
-        }
-    }
-
-    for (int i = 1; i < size + 1; i++) {
-        if (arr[i] < 0) {
-            temp[index++] = arr[i];
-        }
-    }
-
-
-    for (int i = 1; i < size + 1; i++) {
-        arr[i] = temp[i - 1];
-    }
-}
-
-void replace_negative_with_average(int *arr) {
-    int size = arr[0];
-
-    if (size == 0) {
-        return;
-    }
-
-    int sum = 0;
-    for (int i = 1; i < size + 1; i++) {
-        sum += arr[i];
-    }
-    int average = sum / size;
-
-    for (int i = 1; i < size + 1; i++) {
-        if (arr[i] < 0) {
-            arr[i] = average;
-        }
-    }
-}
 
 int main() {
     srand(time(NULL));
@@ -138,7 +22,7 @@ int main() {
         scanf("%d %d", &A, &B);
     }
 
-    int **arr = malloc(A * sizeof(int *));
+    ARRAY_TYPE **arr = malloc(A * sizeof(ARRAY_TYPE *));
 
     if (arr == NULL) {
         printf("Memory not allocated!");
@@ -155,7 +39,7 @@ int main() {
     }
 
     for (int i = 0; i < A; i++) {
-        int *temp_i = malloc((B + 1) * sizeof(int));
+        ARRAY_TYPE *temp_i = malloc((B + 1) * sizeof(ARRAY_TYPE));
         if (temp_i == NULL) {
             printf("Memory not allocated!");
             for (int k = 0; k < i; k++) {
@@ -166,9 +50,9 @@ int main() {
         }
         arr[i] = temp_i;
 
-        arr[i][0] = B;
-        for (int j = 1; j < B + 1; j++) {
-            arr[i][j] = rand() % (max - min + 1) + min;
+        LEN(arr[i]) = B;
+        for (int j = 0; j < B; j++) {
+            ELEM(arr[i], j) = rand() % (max - min + 1) + min;
         }
         temp_i = NULL;
     }
