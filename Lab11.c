@@ -136,12 +136,12 @@ void printCircle(const Circle *c) {
 // Функция ввода круга с проверкой
 Circle inputCircle() {
     float x, y, r;
-    printf("Введите x, y, r круга: ");
+    printf("Введите x, y, r круга >> ");
     scanf("%f %f %f", &x, &y, &r);
-    if (r <= 0) {
+    while (r <= 0) {
         printf("Некорректный ввод! Радиус должен быть > 0\n");
-        while (getchar() != '\n'); // очистка буфера
-        exit(1);
+        printf("Введите корректный радиус круга >> ");
+        scanf("%f", &r);
     }
     return createCircle(x, y, r);
 }
@@ -174,7 +174,7 @@ int main() {
             case 2: {
                 Circle c = inputCircle();
                 float px, py;
-                printf("Введите координаты проверяемой точки: ");
+                printf("Введите координаты проверяемой точки >> ");
                 scanf("%f %f", &px, &py);
                 printf("Точка %s круг\n", inCircle(&c, px, py) ? "входит в" : "не входит в");
                 break;
@@ -190,8 +190,13 @@ int main() {
             case 4: {
                 Circle c = inputCircle();
                 float x, y, width, height;
-                printf("Введите параметры прямоугольной области (x, y, ширина, высота): ");
+                printf("Введите параметры прямоугольной области (x, y, ширина, высота) >> ");
                 scanf("%f %f %f %f", &x, &y, &width, &height);
+                while (width <= 0 || height <= 0) {
+                    printf("Некорректный ввод! Высота и ширина должны быть > 0");
+                    printf("Введите ширину и высоту прямоугольной области >> ");
+                    scanf("%f %f", &width, &height);
+                }
                 printf("Круг %s с прямоугольной областью\n",
                        intersectionCircleRectangle(&c, x, y, width, height) ? "пересекается" : "не перескается");
                 break;
@@ -221,7 +226,7 @@ int main() {
 
             case 7: {
                 int n;
-                printf("Количество кругов: ");
+                printf("Введите количество кругов >> ");
                 scanf("%d", &n);
                 Circle arr[100];
                 for (int i = 0; i < n; i++) {
@@ -241,7 +246,7 @@ int main() {
             }
 
             default:
-                printf("Некорректный выбор\n");
+                printf("Некорректный выбор пункта меню\n");
         }
     }
 }
