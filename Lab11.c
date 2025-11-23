@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
+#include <windows.h>
 
 typedef struct {
     float x;
@@ -138,7 +139,7 @@ Circle inputCircle() {
     printf("Введите x, y, r круга >> ");
     scanf("%f %f %f", &x, &y, &r);
     while (r <= 0) {
-        printf("Некорректный ввод! Радиус должен быть > 0\n");
+        printf("Некорректный ввод! Радиус должен быть >0\n");
         printf("Введите корректный радиус круга >> ");
         scanf("%f", &r);
     }
@@ -146,6 +147,7 @@ Circle inputCircle() {
 }
 
 int main() {
+    SetConsoleOutputCP(CP_UTF8);
     while (true) {
         int command;
         printf("\nВыберите операцию (0 - выход):\n");
@@ -166,6 +168,7 @@ int main() {
 
             case 1: {
                 Circle c = inputCircle();
+                printf("Создан круг с параметрами:\n");
                 printCircle(&c);
                 break;
             }
@@ -192,7 +195,7 @@ int main() {
                 printf("Введите параметры прямоугольной области (x, y, ширина, высота) >> ");
                 scanf("%f %f %f %f", &x, &y, &width, &height);
                 while (width <= 0 || height <= 0) {
-                    printf("Некорректный ввод! Высота и ширина должны быть > 0");
+                    printf("Некорректный ввод! Высота и ширина должны быть >0\n");
                     printf("Введите ширину и высоту прямоугольной области >> ");
                     scanf("%f %f", &width, &height);
                 }

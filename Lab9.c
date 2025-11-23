@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <time.h>
+#include <windows.h>
 
 #define INFO_COMMAND "-info"
 #define CREATE_COMMAND "-create"
@@ -19,14 +20,17 @@ int count_numbers_in_text(const char *text) {
     int counter = 0;
     const char *p = text;
     while (*p != '\0') {
-        while (*p && (isspace((unsigned char)*p) || *p == ',' || is_end_sentence_char(*p))) ++p;
+        while (*p && (isspace((unsigned char) *p) || *p == ',' || is_end_sentence_char(*p))) ++p;
         if (!*p) break;
         const char *s = p;
-        while (*p && !(isspace((unsigned char)*p) || *p == ',' || is_end_sentence_char(*p))) ++p;
+        while (*p && !(isspace((unsigned char) *p) || *p == ',' || is_end_sentence_char(*p))) ++p;
         const char *e = p;
         bool all_digits = true;
         for (const char *q = s; q < e; ++q) {
-            if (!isdigit((unsigned char)*q)) { all_digits = false; break; }
+            if (!isdigit((unsigned char) *q)) {
+                all_digits = false;
+                break;
+            }
         }
         if (all_digits && e > s) ++counter;
     }
@@ -39,7 +43,7 @@ bool starts_with_seq_case_insensitive(const char *p, const char *seq, int len_wo
     for (int i = 0; i <= len_word - len_seq; ++i) {
         bool match = true;
         for (int j = 0; j < len_seq; ++j) {
-            if (tolower((unsigned char)p[i + j]) != tolower((unsigned char)seq[j])) {
+            if (tolower((unsigned char) p[i + j]) != tolower((unsigned char) seq[j])) {
                 match = false;
                 break;
             }
@@ -62,7 +66,7 @@ char *remove_words_by_sequence(const char *text, const char *sequence) {
 
     while (*src != '\0') {
         // Если текущий символ - разделитель (пробел, таб, запятая, или .,!,?), копируем и двигаем дальше
-        if (isspace((unsigned char)*src) || *src == ',' || is_end_sentence_char(*src)) {
+        if (isspace((unsigned char) *src) || *src == ',' || is_end_sentence_char(*src)) {
             *dst++ = *src++;
             continue;
         }
@@ -70,19 +74,22 @@ char *remove_words_by_sequence(const char *text, const char *sequence) {
         // Иначе, начало токена: находим конец токена
         const char *tok_start = src;
         const char *p = src;
-        while (*p != '\0' && !(isspace((unsigned char)*p) || *p == ',' || is_end_sentence_char(*p))) ++p;
+        while (*p != '\0' && !(isspace((unsigned char) *p) || *p == ',' || is_end_sentence_char(*p))) ++p;
         const char *tok_end = p;
 
         bool is_word = true;
         for (const char *q = tok_start; q < tok_end; ++q) {
-            if (!isalpha((unsigned char)*q)) { is_word = false; break; }
+            if (!isalpha((unsigned char) *q)) {
+                is_word = false;
+                break;
+            }
         }
 
-        int tok_len = (int)(tok_end - tok_start);
+        int tok_len = (int) (tok_end - tok_start);
         // Проверяем, содержит ли токен последовательность
         bool contains = false;
         if (is_word) {
-            contains = starts_with_seq_case_insensitive(tok_start, sequence, tok_len, (int)seq_len);
+            contains = starts_with_seq_case_insensitive(tok_start, sequence, tok_len, (int) seq_len);
         }
 
         if (!contains) {
@@ -101,18 +108,21 @@ char *remove_words_by_sequence(const char *text, const char *sequence) {
         if (norm) {
             char *w = norm;
             const char *r = result;
-            while (*r && isspace((unsigned char)*r)) r++;
+            while (*r && isspace((unsigned char) *r)) r++;
             bool sp = false;
             while (*r) {
-                if (isspace((unsigned char)*r)) {
-                    if (!sp) { *w++ = ' '; sp = true; }
+                if (isspace((unsigned char) *r)) {
+                    if (!sp) {
+                        *w++ = ' ';
+                        sp = true;
+                    }
                 } else {
                     *w++ = *r;
                     sp = false;
                 }
                 r++;
             }
-            if (w > norm && isspace((unsigned char)w[-1])) w--;
+            if (w > norm && isspace((unsigned char) w[-1])) w--;
             *w = '\0';
             free(result);
             result = norm;
@@ -135,7 +145,7 @@ char **create_arr_by_first_words(const char *text) {
     const char *p = text;
     while (*p != '\0') {
         // Пропустить начальные пробелы перед предложением
-        while (*p != '\0' && isspace((unsigned char)*p)) ++p;
+        while (*p != '\0' && isspace((unsigned char) *p)) ++p;
         if (*p == '\0') break;
 
         const char *sentence_start = p;
@@ -146,18 +156,21 @@ char **create_arr_by_first_words(const char *text) {
         const char *q = sentence_start;
         char *word = NULL;
         while (q < sentence_end) {
-            while (q < sentence_end && (isspace((unsigned char)*q) || *q == ',')) ++q;
+            while (q < sentence_end && (isspace((unsigned char) *q) || *q == ',')) ++q;
             if (q >= sentence_end) break;
             const char *t0 = q;
-            while (q < sentence_end && !(isspace((unsigned char)*q) || *q == ',')) ++q;
+            while (q < sentence_end && !(isspace((unsigned char) *q) || *q == ',')) ++q;
             const char *t1 = q;
 
             bool all_alpha = true;
             for (const char *k = t0; k < t1; ++k) {
-                if (!isalpha((unsigned char)*k)) { all_alpha = false; break; }
+                if (!isalpha((unsigned char) *k)) {
+                    all_alpha = false;
+                    break;
+                }
             }
             if (all_alpha && t1 > t0) {
-                int len = (int)(t1 - t0);
+                int len = (int) (t1 - t0);
                 word = malloc(len + 1);
                 if (!word) {
                     // очистка при ошибке
@@ -222,6 +235,7 @@ void free_string_array(char **arr) {
 }
 
 int main(int argc, char *argv[]) {
+    SetConsoleOutputCP(CP_UTF8);
     // for (int i = 0; i < argc; ++i) {
     //     printf("[%d] >> %s\n", i, argv[i]);
     // }
@@ -229,7 +243,8 @@ int main(int argc, char *argv[]) {
 
     if (argc < 3) {
         printf("Использование: %s \"<текст>\" <команда> [параметры...]\n", argv[0]);
-        printf("Команды: -info (подсчитать числа), -create (создать массив первых слов), -delete <последовательность>\n");
+        printf(
+            "Команды: -info (подсчитать числа), -create (создать массив первых слов), -delete <последовательность>\n");
         return 1;
     }
 
@@ -243,8 +258,7 @@ int main(int argc, char *argv[]) {
             return 1;
         }
         printf("Общее количество чисел в тексте: %d\n", count);
-    }
-    else if (strcmp(command, CREATE_COMMAND) == 0) {
+    } else if (strcmp(command, CREATE_COMMAND) == 0) {
         printf("Массив первых слов предложений:\n");
         char **arr = create_arr_by_first_words(text);
         if (arr == NULL) {
@@ -253,8 +267,7 @@ int main(int argc, char *argv[]) {
         }
         print_array(arr);
         free_string_array(arr);
-    }
-    else if (strcmp(command, DELETE_COMMAND) == 0) {
+    } else if (strcmp(command, DELETE_COMMAND) == 0) {
         if (argc < 4) {
             printf("Ошибка: для команды -delete требуется указать последовательность символов\n");
             return 1;
@@ -269,10 +282,15 @@ int main(int argc, char *argv[]) {
         }
         printf("Новая строка: %s\n", res);
         free(res);
-    }
-    else {
+    } else {
         printf("Неизвестная команда: %s\n", command);
         printf("Доступные команды: -info, -create, -delete\n");
         return 1;
     }
 }
+
+// "tytcat 234catt werweCAT. $33cat333 caffcat ert345erdfgcat dfcATdfg" -delete cat
+//
+// "34 $jdf sdfsd sd sdf. dsf 34 345? er$33 fde34 rer##. er33 4ffed 34334 rerrr 43" -create
+//
+// "234 hjjd dhjhh 23hd 34. 2334 wek 233 33 jjrr3jj? 233$ 2323 23 222" -info
