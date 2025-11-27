@@ -19,14 +19,17 @@ int count_numbers_in_text(const char *text) {
     int counter = 0;
     const char *p = text;
     while (*p != '\0') {
-        while (*p && (isspace((unsigned char)*p) || *p == ',' || is_end_sentence_char(*p))) ++p;
+        while (*p && (isspace((unsigned char) *p) || *p == ',' || is_end_sentence_char(*p))) ++p;
         if (!*p) break;
         const char *s = p;
-        while (*p && !(isspace((unsigned char)*p) || *p == ',' || is_end_sentence_char(*p))) ++p;
+        while (*p && !(isspace((unsigned char) *p) || *p == ',' || is_end_sentence_char(*p))) ++p;
         const char *e = p;
         bool all_digits = true;
         for (const char *q = s; q < e; ++q) {
-            if (!isdigit((unsigned char)*q)) { all_digits = false; break; }
+            if (!isdigit((unsigned char) *q)) {
+                all_digits = false;
+                break;
+            }
         }
         if (all_digits && e > s) ++counter;
     }
@@ -34,12 +37,12 @@ int count_numbers_in_text(const char *text) {
 }
 
 // Сравнение подстроки без учёта регистра
-bool starts_with_seq_case_insensitive(const char *p, const char *seq, int len_word, int len_seq) {
-    if (len_word < len_seq) return false;
-    for (int i = 0; i <= len_word - len_seq; ++i) {
+bool contains_seq_case_insensitive(const char *word, int word_len, const char *seq, int seq_len) {
+    if (word_len < seq_len) return false;
+    for (int i = 0; i <= word_len - seq_len; ++i) {
         bool match = true;
-        for (int j = 0; j < len_seq; ++j) {
-            if (tolower((unsigned char)p[i + j]) != tolower((unsigned char)seq[j])) {
+        for (int j = 0; j < seq_len; ++j) {
+            if (tolower((unsigned char)word[i + j]) != tolower((unsigned char)seq[j])) {
                 match = false;
                 break;
             }
@@ -61,62 +64,56 @@ char *remove_words_by_sequence(const char *text, const char *sequence) {
     char *dst = result;
 
     while (*src != '\0') {
-        // Если текущий символ - разделитель (пробел, таб, запятая, или .,!,?), копируем и двигаем дальше
+        // Пропускаем разделители
         if (isspace((unsigned char)*src) || *src == ',' || is_end_sentence_char(*src)) {
             *dst++ = *src++;
             continue;
         }
 
-        // Иначе, начало токена: находим конец токена
+        // Находим границы токена
         const char *tok_start = src;
-        const char *p = src;
-        while (*p != '\0' && !(isspace((unsigned char)*p) || *p == ',' || is_end_sentence_char(*p))) ++p;
-        const char *tok_end = p;
-
-        bool is_word = true;
-        for (const char *q = tok_start; q < tok_end; ++q) {
-            if (!isalpha((unsigned char)*q)) { is_word = false; break; }
+        while (*src != '\0' && !(isspace((unsigned char)*src) || *src == ',' || is_end_sentence_char(*src))) {
+            src++;
         }
-
+        const char *tok_end = src;
         int tok_len = (int)(tok_end - tok_start);
-        // Проверяем, содержит ли токен последовательность
-        bool contains = false;
-        if (is_word) {
-            contains = starts_with_seq_case_insensitive(tok_start, sequence, tok_len, (int)seq_len);
-        }
 
+        // Проверяем, содержит ли токен последовательность (без учёта регистра)
+        bool contains = contains_seq_case_insensitive(tok_start, tok_len, sequence, (int)seq_len);
+
+        // Копируем токен только если он НЕ содержит последовательность
         if (!contains) {
             for (const char *q = tok_start; q < tok_end; ++q) {
                 *dst++ = *q;
             }
         }
-        src = tok_end;
     }
 
     *dst = '\0';
 
-    // нормализация пробелов
-    {
-        char *norm = malloc(strlen(result) + 1);
-        if (norm) {
-            char *w = norm;
-            const char *r = result;
-            while (*r && isspace((unsigned char)*r)) r++;
-            bool sp = false;
-            while (*r) {
-                if (isspace((unsigned char)*r)) {
-                    if (!sp) { *w++ = ' '; sp = true; }
-                } else {
-                    *w++ = *r;
-                    sp = false;
+    // Нормализация пробелов (оставляем ваш код)
+    char *norm = malloc(strlen(result) + 1);
+    if (norm) {
+        char *w = norm;
+        const char *r = result;
+        while (*r && isspace((unsigned char)*r)) r++;
+        bool sp = false;
+        while (*r) {
+            if (isspace((unsigned char)*r)) {
+                if (!sp) {
+                    *w++ = ' ';
+                    sp = true;
                 }
-                r++;
+            } else {
+                *w++ = *r;
+                sp = false;
             }
-            if (w > norm && isspace((unsigned char)w[-1])) w--;
-            *w = '\0';
-            free(result);
-            result = norm;
+            r++;
         }
+        if (w > norm && isspace((unsigned char)w[-1])) w--;
+        *w = '\0';
+        free(result);
+        result = norm;
     }
 
     size_t final_len = strlen(result);
@@ -135,7 +132,7 @@ char **create_arr_by_first_words(const char *text) {
     const char *p = text;
     while (*p != '\0') {
         // Пропустить начальные пробелы перед предложением
-        while (*p != '\0' && isspace((unsigned char)*p)) ++p;
+        while (*p != '\0' && isspace((unsigned char) *p)) ++p;
         if (*p == '\0') break;
 
         const char *sentence_start = p;
@@ -146,18 +143,21 @@ char **create_arr_by_first_words(const char *text) {
         const char *q = sentence_start;
         char *word = NULL;
         while (q < sentence_end) {
-            while (q < sentence_end && (isspace((unsigned char)*q) || *q == ',')) ++q;
+            while (q < sentence_end && (isspace((unsigned char) *q) || *q == ',')) ++q;
             if (q >= sentence_end) break;
             const char *t0 = q;
-            while (q < sentence_end && !(isspace((unsigned char)*q) || *q == ',')) ++q;
+            while (q < sentence_end && !(isspace((unsigned char) *q) || *q == ',')) ++q;
             const char *t1 = q;
 
             bool all_alpha = true;
             for (const char *k = t0; k < t1; ++k) {
-                if (!isalpha((unsigned char)*k)) { all_alpha = false; break; }
+                if (!isalpha((unsigned char) *k)) {
+                    all_alpha = false;
+                    break;
+                }
             }
             if (all_alpha && t1 > t0) {
-                int len = (int)(t1 - t0);
+                int len = (int) (t1 - t0);
                 word = malloc(len + 1);
                 if (!word) {
                     // очистка при ошибке
@@ -229,7 +229,8 @@ int main(int argc, char *argv[]) {
 
     if (argc < 3) {
         printf("Использование: %s \"<текст>\" <команда> [параметры...]\n", argv[0]);
-        printf("Команды: -info (подсчитать числа), -create (создать массив первых слов), -delete <последовательность>\n");
+        printf(
+            "Команды: -info (подсчитать числа), -create (создать массив первых слов), -delete <последовательность>\n");
         return 1;
     }
 
@@ -243,8 +244,7 @@ int main(int argc, char *argv[]) {
             return 1;
         }
         printf("Общее количество чисел в тексте: %d\n", count);
-    }
-    else if (strcmp(command, CREATE_COMMAND) == 0) {
+    } else if (strcmp(command, CREATE_COMMAND) == 0) {
         printf("Массив первых слов предложений:\n");
         char **arr = create_arr_by_first_words(text);
         if (arr == NULL) {
@@ -253,8 +253,7 @@ int main(int argc, char *argv[]) {
         }
         print_array(arr);
         free_string_array(arr);
-    }
-    else if (strcmp(command, DELETE_COMMAND) == 0) {
+    } else if (strcmp(command, DELETE_COMMAND) == 0) {
         if (argc < 4) {
             printf("Ошибка: для команды -delete требуется указать последовательность символов\n");
             return 1;
@@ -269,8 +268,7 @@ int main(int argc, char *argv[]) {
         }
         printf("Новая строка: %s\n", res);
         free(res);
-    }
-    else {
+    } else {
         printf("Неизвестная команда: %s\n", command);
         printf("Доступные команды: -info, -create, -delete\n");
         return 1;
