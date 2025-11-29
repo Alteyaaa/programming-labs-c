@@ -53,7 +53,7 @@ typedef union {
 typedef struct {
     EventType type;
     EventDetails details;
-    EventFlags flags;   // <--- ИСПРАВЛЕНО
+    EventFlags flags;
 } Event;
 
 Event *createEvent(EventType type, EventFlags flags, EventDetails details) {
@@ -205,7 +205,7 @@ int main() {
     int choice;
     Event *newEvent;
     EventDetails details;
-    EventFlags flags;  // <--- ИСПРАВЛЕНО
+    EventFlags flags;
     int eventIndex;
 
     while (true) {
