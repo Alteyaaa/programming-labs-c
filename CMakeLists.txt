@@ -15,3 +15,8 @@ add_executable(Lab9 Lab9.c)
 add_executable(Lab10 Lab10.c)
 add_executable(Lab11 Lab11.c)
 add_executable(Lab12 Lab12.c)
+add_executable(Lab13
+        Lab13/Lab13.c
+        Lab13/11.c
+        Lab13/12.c
+)
