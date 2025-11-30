@@ -112,7 +112,7 @@ void printEvent(Event *event) {
             printf("Залы: %d\n", event->details.exhibition.halls);
             break;
     }
-    printf("Состояния: ");
+    printf("Состояние: ");
     if (event->flags.raw & SCHEDULED)
         printf("Запланировано ");
     if (event->flags.raw & CANCELLED)
@@ -136,7 +136,7 @@ void printAllEvents(Event **events, int count) {
 
 void printEventsByFlags(Event **events, int count, EventFlags mask) {
     for (int i = 0; i < count; i++) {
-        if ((events[i]->flags.raw & mask.raw) == mask.raw) {  // <--- ИСПРАВЛЕНО
+        if ((events[i]->flags.raw & mask.raw) == mask.raw) {
             printEvent(events[i]);
             printf("\n");
         }
