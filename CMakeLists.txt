@@ -20,3 +20,6 @@ add_executable(Lab13
         Lab13/11.c
         Lab13/12.c
 )
+add_executable(Lab14.1 Lab14/9.c)
+add_executable(Lab14.2 Lab14/11.c)
+
