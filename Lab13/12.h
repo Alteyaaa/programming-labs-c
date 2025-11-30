@@ -38,13 +38,14 @@ typedef union {
 
 typedef union {
     unsigned char raw;
+
     struct {
-        unsigned scheduled      : 1;
-        unsigned cancelled      : 1;
-        unsigned ticketRequired : 1;
-        unsigned online         : 1;
-        unsigned fullyBooked    : 1;
-        unsigned reserved       : 3;
+        unsigned scheduled: 1;
+        unsigned cancelled: 1;
+        unsigned ticketRequired: 1;
+        unsigned online: 1;
+        unsigned fullyBooked: 1;
+        unsigned reserved: 3;
     } bits;
 } EventFlags;
 
@@ -55,8 +56,11 @@ typedef struct {
 } Event;
 
 Event *createEvent(EventType type, EventFlags flags, EventDetails details);
+
 Event **addEvent(Event **events, int *count, Event *newEvent);
+
 Event **deleteEvent(Event **events, int *count, int index);
+
 void updateEvent(Event *event, EventType newType, EventFlags newFlags, EventDetails newDetails);
 #endif
 
